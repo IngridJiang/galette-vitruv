@@ -146,7 +146,7 @@ cd galette-benchmark && mvn exec:java
 ### Amathea-ASCET Example Features
 - **Multi-path exploration**: Automatically tests all 5 user choice paths (0-4)
 - **Constraint collection**: Gathers path constraints like `user_choice == 0`, `user_choice == 1`
-- **Real Vitruvius integration**: Works with actual `.reactions` files and VSUM
+- **Vitruvius integration**: Works with actual `.reactions` files and VSUM
 - **Metamodel transformation**: Amathea ComponentContainer → ASCET tasks (InterruptTask, PeriodicTask, etc.)
 - **Output analysis**: Saves both transformed models and constraint analysis
 

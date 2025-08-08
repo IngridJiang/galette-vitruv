@@ -1,33 +1,62 @@
 #!/bin/bash
 
-# Amathea-ASCET Model Transformation Demo
-# Shows symbolic execution with model transformations
+# Vitruvius + Galette Symbolic Execution Demo
+# Shows symbolic execution with real Vitruvius components
 
 set -e
 
-echo "🚀 Amathea-ASCET Model Transformation Demo"
-echo "========================================="
+echo "🚀 Vitruvius + Galette Symbolic Execution Demo"
+echo "=============================================="
 echo
 
-# Run the working demo
-echo "📦 Running Amathea-ASCET Transformation Example..."
-echo "   (Shows 4 scenarios: Concrete, Symbolic, Batch, User Interaction)"
+echo "Welcome to the Vitruvius Integration Demo!"
+echo
+echo "This demo showcases Vitruvius components:"
+echo "  1. EMF metamodels (.ecore files) instead of custom Java classes"
+echo "  2. Vitruvius reactions (.reactions files) instead of Java switch statements"
+echo "  3. userInteractor.singleSelectionDialogBuilder"
+echo "  4. ViewType-based model transformations"
+echo "  5. VSUM integration with symbolic execution"
+echo "  6. Multi-module project structure (model/viewtype/vsum/consistency)"
 echo
 
-cd knarr-runtime
-mvn exec:java -Dexec.mainClass="edu.neu.ccs.prl.galette.examples.AmathaeaModelTransformationExample"
+# Run the Vitruvius integration demo
+echo "📦 Running Vitruvius VSUM + Galette Symbolic Execution..."
+echo "   (Shows EMF metamodels, reactions, ViewType, VSUM integration)"
+echo
+
+cd amathea-acset-integration/vsum
+mvn exec:java -Dcheckstyle.skip=true -Dexec.mainClass="tools.vitruv.methodologisttemplate.vsum.GaletteSymbolicTest"
 
 echo
 echo "✅ Demo completed!"
 echo
-echo "🎯 What was demonstrated:"
-echo "   1. Concrete transformation: EngineControlTask → PeriodicTask"
-echo "   2. Symbolic transformation: BrakeControlTask with symbolic user choice"
-echo "   3. Batch transformation: All 5 possible transformation paths"
-echo "   4. User interaction: Dialog-based transformations"
+echo "🎯 Vitruvius Integration Features Demonstrated:"
 echo
-echo "🔧 Technical details:"
-echo "   - Amathea ComponentContainer tasks → ASCET tasks"
-echo "   - User selections (0-4) drive transformation logic"  
-echo "   - Framework ready for path constraint collection"
-echo "   - Clean separation of business logic and symbolic execution"
+echo "1. EMF Metamodels:"
+echo "   - model.ecore: Amathea metamodel (ComponentContainer, Task, PreemptionType)"
+echo "   - model2.ecore: ASCET metamodel (AscetModel, InterruptTask, PeriodicTask, etc.)"
+echo
+echo "2. Vitruvius Reactions:"
+echo "   - templateReactions.reactions: Transformation rules with userInteractor"
+echo "   - Lines 78-82: Key integration point for symbolic execution"
+echo
+echo "3. ViewType Implementation:"
+echo "   - ChangeTransformingViewType.java: View-based model transformations"
+echo "   - Symbolic execution wrapper integration in transformation logic"
+echo
+echo "4. VSUM Integration:"
+echo "   - GaletteSymbolicTest.java: Complete VSUM + symbolic execution integration"
+echo "   - Multi-path exploration of all 5 user choice options (0-4)"
+echo "   - userInteractor.singleSelectionDialogBuilder simulation"
+echo
+echo "5. Maintained Symbolic Execution:"
+echo "   - SymbolicExecutionWrapper.makeSymbolicInt() calls preserved"
+echo "   - Path constraint collection in switch statements"
+echo "   - SMT solver integration for constraint analysis"
+echo
+echo "For more information:"
+echo "  - CLAUDE.md: Project overview and build instructions"
+echo "  - amathea-acset-integration/: Vitruvius project structure"
+echo
+echo "Thank you for trying the Vitruvius + Galette Integration Demo!"

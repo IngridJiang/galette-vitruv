@@ -13,7 +13,15 @@
       "Bash(mkdir:*)",
       "Bash(cp:*)",
       "Bash(git submodule:*)",
-      "Bash(git add:*)"
+      "Bash(git add:*)",
+      "Bash(find:*)",
+      "Bash(java:*)",
+      "Bash(git checkout:*)",
+      "Bash(git ls-tree:*)",
+      "Bash(powershell.exe:*)",
+      "Bash(sed:*)",
+      "Bash(.run-amathea-demo.ps1)",
+      "Bash(grep:*)"
     ],
     "deny": []
   }

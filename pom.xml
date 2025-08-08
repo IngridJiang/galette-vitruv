@@ -45,7 +45,7 @@
         <module>galette-benchmark</module>
         <module>galette-integration-tests</module>
         <module>knarr-runtime</module>
-        <module>galette-amathea-integration</module>
+        <module>amathea-acset-integration</module>
     </modules>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -411,6 +411,23 @@
         <repository>
             <id>ossrh</id>
             <url>https://s01.oss.sonatype.org/content/repositories/snapshots/</url>
+        </repository>
+        <!-- Vitruvius Repository -->
+        <repository>
+            <id>vitruv-releases</id>
+            <name>Vitruvius Release Repository</name>
+            <url>https://vitruv-tools.github.io/updatesite/releases/</url>
+        </repository>
+        <repository>
+            <id>vitruv-snapshots</id>
+            <name>Vitruvius Snapshot Repository</name>
+            <url>https://vitruv-tools.github.io/updatesite/nightly/</url>
+        </repository>
+        <!-- Eclipse Repository -->
+        <repository>
+            <id>eclipse-releases</id>
+            <name>Eclipse Release Repository</name>
+            <url>https://repo.eclipse.org/content/groups/releases/</url>
         </repository>
     </repositories>
     <pluginRepositories>
