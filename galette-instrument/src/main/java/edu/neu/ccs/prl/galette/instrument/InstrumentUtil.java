@@ -12,11 +12,15 @@ public final class InstrumentUtil {
     }
 
     public static File javaHomeToJavaExec(File javaHome) {
-        return new File(javaHomeToBin(javaHome), "java");
+        String os = System.getProperty("os.name").toLowerCase();
+        String executable = os.contains("win") ? "java.exe" : "java";
+        return new File(javaHomeToBin(javaHome), executable);
     }
 
     public static File javaHomeToJLinkExec(File javaHome) {
-        return new File(javaHomeToBin(javaHome), "jlink");
+        String os = System.getProperty("os.name").toLowerCase();
+        String executable = os.contains("win") ? "jlink.exe" : "jlink";
+        return new File(javaHomeToBin(javaHome), executable);
     }
 
     public static boolean isJavaHome(File directory) {
