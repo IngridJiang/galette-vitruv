@@ -9,7 +9,11 @@
       "Bash(.run-amathea-demo.bat)",
       "Bash(chmod:*)",
       "Bash(./run-amathea-demo.sh:*)",
-      "Bash(rm:*)"
+      "Bash(rm:*)",
+      "Bash(mkdir:*)",
+      "Bash(cp:*)",
+      "Bash(git submodule:*)",
+      "Bash(git add:*)"
     ],
     "deny": []
   }
