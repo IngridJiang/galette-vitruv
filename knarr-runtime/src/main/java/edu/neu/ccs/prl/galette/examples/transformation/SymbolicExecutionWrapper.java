@@ -4,8 +4,8 @@ import edu.neu.ccs.prl.galette.concolic.knarr.runtime.GaletteSymbolicator;
 import edu.neu.ccs.prl.galette.concolic.knarr.runtime.PathConditionWrapper;
 import edu.neu.ccs.prl.galette.concolic.knarr.runtime.PathUtils;
 import edu.neu.ccs.prl.galette.concolic.knarr.runtime.SymbolicComparison;
-import edu.neu.ccs.prl.galette.examples.models.source.BrakeDiscSource;
-import edu.neu.ccs.prl.galette.examples.models.target.BrakeDiscTarget;
+import edu.neu.ccs.prl.galette.examples.models.sourcemodel.BrakeDiscSource;
+import edu.neu.ccs.prl.galette.examples.models.targetmodel.BrakeDiscTarget;
 import edu.neu.ccs.prl.galette.internal.runtime.Tag;
 import java.util.*;
 import za.ac.sun.cs.green.expr.*;
@@ -165,6 +165,47 @@ public class SymbolicExecutionWrapper {
      */
     public static void reset() {
         GaletteSymbolicator.reset();
+    }
+
+    /**
+     * Perform symbolic-aware comparison between two integer values.
+     *
+     * This method handles the symbolic execution concerns for integer comparisons,
+     * commonly used in switch statements and user selection scenarios.
+     *
+     * @param leftValue The left operand (may be Galette-tagged)
+     * @param rightValue The right operand (typically concrete)
+     * @param operator The comparison operator from Green solver
+     * @return The result of the comparison
+     */
+    public static boolean compareInt(int leftValue, int rightValue, Operation.Operator operator) {
+        // Extract tags from both values
+        edu.neu.ccs.prl.galette.internal.runtime.Tag leftTag =
+                edu.neu.ccs.prl.galette.internal.runtime.Tainter.getTag(leftValue);
+        edu.neu.ccs.prl.galette.internal.runtime.Tag rightTag =
+                edu.neu.ccs.prl.galette.internal.runtime.Tainter.getTag(rightValue);
+
+        // Switch on the comparison operator and call appropriate SymbolicComparison method
+        switch (operator) {
+            case GT: // Greater than >
+                return SymbolicComparison.greaterThan(leftValue, leftTag, rightValue, rightTag);
+
+            case GE: // Greater than or equal >=
+                return SymbolicComparison.greaterThanOrEqual(leftValue, leftTag, rightValue, rightTag);
+
+            case LT: // Less than <
+                return SymbolicComparison.lessThan(leftValue, leftTag, rightValue, rightTag);
+
+            case LE: // Less than or equal <=
+                return SymbolicComparison.lessThanOrEqual(leftValue, leftTag, rightValue, rightTag);
+
+            case EQ: // Equal ==
+                return SymbolicComparison.equal(leftValue, leftTag, rightValue, rightTag);
+
+            default:
+                throw new IllegalArgumentException(
+                        "Unsupported comparison operator: " + operator + ". Supported operators: GT, GE, LT, LE, EQ");
+        }
     }
 
     /**
