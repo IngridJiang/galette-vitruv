@@ -149,6 +149,15 @@ public class VitruvSymbolicExecutionExample {
         System.out.println("================================================================================");
         System.out.println();
 
+        // WARMUP: Execute once to eliminate JVM warmup overhead
+        System.out.println("--------------------------------------------------------------------------------");
+        System.out.println("WARMUP EXECUTION (not counted in measurements)");
+        System.out.println("--------------------------------------------------------------------------------");
+        Path warmupDir = Paths.get("galette-output-warmup");
+        executeWithSymbolicInput(testInstance, warmupDir, 0, "warmup");
+        System.out.println("  ✓ Warmup complete (JVM warmed up, classes loaded)");
+        System.out.println();
+
         String[] taskOptions = {
             "Create InterruptTask", "Create PeriodicTask", "Create SoftwareTask", "Create TimeTableTask", "Decide Later"
         };
