@@ -33,14 +33,21 @@ public class VitruvSymbolicExecutionExample {
     private static class PathResult {
         final int userChoice;
         final String pathConstraint;
-        final long executionTime;
-        final long initializationTime;
+        final long totalTime;
+        long executionTime;
+        long initializationTime;
 
-        PathResult(int userChoice, String pathConstraint, long executionTime, long initializationTime) {
+        PathResult(int userChoice, String pathConstraint, long totalTime) {
             this.userChoice = userChoice;
             this.pathConstraint = pathConstraint;
-            this.executionTime = executionTime;
-            this.initializationTime = initializationTime;
+            this.totalTime = totalTime;
+            this.executionTime = totalTime;
+            this.initializationTime = 0;
+        }
+
+        void setInitializationTime(long initTime) {
+            this.initializationTime = initTime;
+            this.executionTime = totalTime - initTime;
         }
     }
 
@@ -49,7 +56,7 @@ public class VitruvSymbolicExecutionExample {
      * Follows the BrakeDisc pattern from ModelTransformationExample.executeConcolic()
      */
     private static PathResult executeWithSymbolicInput(
-            Object testInstance, Path workDir, int userChoice, String label, boolean isFirstExecution) {
+            Object testInstance, Path workDir, int userChoice, String label) {
         // Reset symbolic execution state
         GaletteSymbolicator.reset();
         PathUtils.resetPC();
@@ -68,22 +75,10 @@ public class VitruvSymbolicExecutionExample {
 
         // Execute Vitruvius transformation with the TAGGED value
         long startTime = System.nanoTime();
-        long vsumInitStart = 0;
-        long vsumInitEnd = 0;
 
         try {
             Method insertTask = testInstance.getClass().getMethod("insertTask", Path.class, int.class);
-
-            // Track VSUM initialization time (only for first execution)
-            if (isFirstExecution) {
-                vsumInitStart = System.nanoTime();
-            }
-
             insertTask.invoke(testInstance, workDir, taggedUserChoice);
-
-            if (isFirstExecution) {
-                vsumInitEnd = System.nanoTime();
-            }
         } catch (Exception e) {
             System.err.println("Failed to invoke Test.insertTask: " + e.getMessage());
             e.printStackTrace();
@@ -91,15 +86,6 @@ public class VitruvSymbolicExecutionExample {
 
         long endTime = System.nanoTime();
         long totalTime = (endTime - startTime) / 1_000_000;
-        long initializationTime = 0;
-
-        // Calculate initialization time (only for first path)
-        if (isFirstExecution && vsumInitEnd > 0) {
-            // Estimate: first ~80% of execution is VSUM initialization
-            initializationTime = (long) (totalTime * 0.85); // 85% for VSUM init
-        }
-
-        long executionTime = totalTime - initializationTime;
 
         System.out.println("  ✓ Vitruvius transformation executed");
 
@@ -122,7 +108,7 @@ public class VitruvSymbolicExecutionExample {
             System.out.println("  ⚠ No path constraints collected");
         }
 
-        return new PathResult(userChoice, constraintDescription, executionTime, initializationTime);
+        return new PathResult(userChoice, constraintDescription, totalTime);
     }
 
     /**
@@ -180,19 +166,36 @@ public class VitruvSymbolicExecutionExample {
             // Create unique output directory for each path
             Path workDir = Paths.get("galette-output-" + choice);
 
-            // Execute with symbolic input (track init time for first execution)
-            boolean isFirstExecution = (choice == 0);
+            // Execute with symbolic input
             PathResult result =
-                    executeWithSymbolicInput(testInstance, workDir, choice, "user_choice_" + choice, isFirstExecution);
+                    executeWithSymbolicInput(testInstance, workDir, choice, "user_choice_" + choice);
             results.add(result);
 
-            if (result.initializationTime > 0) {
-                System.out.println("  Initialization time: " + result.initializationTime + " ms (VSUM setup)");
-                System.out.println("  Execution time: " + result.executionTime + " ms (business logic)");
-                System.out.println("  Total time: " + (result.initializationTime + result.executionTime) + " ms");
-            } else {
-                System.out.println("  Execution time: " + result.executionTime + " ms");
+            System.out.println("  Total time: " + result.totalTime + " ms");
+            System.out.println();
+        }
+
+        // Calculate real initialization time using paths 2-5 as baseline
+        // Path 1 includes VSUM initialization, paths 2-5 do not
+        if (results.size() >= 2) {
+            // Calculate average execution time from paths 2-5 (excluding initialization)
+            long sumExecutionTime = 0;
+            for (int i = 1; i < results.size(); i++) {
+                sumExecutionTime += results.get(i).totalTime;
             }
+            long avgExecutionTime = sumExecutionTime / (results.size() - 1);
+
+            // Real initialization time = Path 1's total time - average execution time
+            long realInitTime = results.get(0).totalTime - avgExecutionTime;
+            results.get(0).setInitializationTime(realInitTime);
+
+            System.out.println("--------------------------------------------------------------------------------");
+            System.out.println("CALCULATED INITIALIZATION TIME");
+            System.out.println("--------------------------------------------------------------------------------");
+            System.out.println("Path 1 total time: " + results.get(0).totalTime + " ms");
+            System.out.println("Avg execution time (paths 2-5): " + avgExecutionTime + " ms");
+            System.out.println("Real VSUM initialization time: " + realInitTime + " ms");
+            System.out.println("Path 1 business logic time: " + results.get(0).executionTime + " ms");
             System.out.println();
         }
 
