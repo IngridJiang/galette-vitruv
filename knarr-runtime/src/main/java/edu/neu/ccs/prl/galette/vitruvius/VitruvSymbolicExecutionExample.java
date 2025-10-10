@@ -184,29 +184,26 @@ public class VitruvSymbolicExecutionExample {
             System.out.println();
         }
 
-        // Calculate real initialization time using paths 2-5 as baseline
-        // Path 1 includes VSUM initialization, paths 2-5 do not
-        if (results.size() >= 2) {
-            // Calculate average execution time from paths 2-5 (excluding initialization)
-            long sumExecutionTime = 0;
-            for (int i = 1; i < results.size(); i++) {
-                sumExecutionTime += results.get(i).totalTime;
-            }
-            long avgExecutionTime = sumExecutionTime / (results.size() - 1);
+        // Calculate real initialization time by re-running Path 1
+        // First execution includes all overhead, second execution is just business logic
+        System.out.println("--------------------------------------------------------------------------------");
+        System.out.println("RE-RUNNING PATH 1 TO MEASURE REAL INITIALIZATION TIME");
+        System.out.println("--------------------------------------------------------------------------------");
+        Path path1RerunDir = Paths.get("galette-output-0-rerun");
+        long startRerun = System.nanoTime();
+        executeWithSymbolicInput(testInstance, path1RerunDir, 0, "user_choice_0_rerun");
+        long endRerun = System.nanoTime();
+        long path1BusinessLogicTime = (endRerun - startRerun) / 1_000_000;
 
-            // Real initialization time = Path 1's total time - average execution time
-            long realInitTime = results.get(0).totalTime - avgExecutionTime;
-            results.get(0).setInitializationTime(realInitTime);
+        // Real initialization time = First run total - Second run time
+        long realInitTime = results.get(0).totalTime - path1BusinessLogicTime;
+        results.get(0).setInitializationTime(realInitTime);
 
-            System.out.println("--------------------------------------------------------------------------------");
-            System.out.println("CALCULATED INITIALIZATION TIME");
-            System.out.println("--------------------------------------------------------------------------------");
-            System.out.println("Path 1 total time: " + results.get(0).totalTime + " ms");
-            System.out.println("Avg execution time (paths 2-5): " + avgExecutionTime + " ms");
-            System.out.println("Real VSUM initialization time: " + realInitTime + " ms");
-            System.out.println("Path 1 business logic time: " + results.get(0).executionTime + " ms");
-            System.out.println();
-        }
+        System.out.println("Path 1 first run (with overhead): " + results.get(0).totalTime + " ms");
+        System.out.println("Path 1 re-run (business logic only): " + path1BusinessLogicTime + " ms");
+        System.out.println("Real initialization + first-time overhead: " + realInitTime + " ms");
+        System.out.println("Path 1 business logic time: " + results.get(0).executionTime + " ms");
+        System.out.println();
 
         // Summary
         System.out.println("================================================================================");
