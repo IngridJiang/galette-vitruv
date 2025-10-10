@@ -50,7 +50,8 @@
       "Bash(do echo \"=== galette-output-$i ===\")",
       "Bash(ls:*)",
       "Bash(done)",
-      "Bash(do echo \"=== galette-output-$i/galette-test-output/vsum-output.xmi ===\")"
+      "Bash(do echo \"=== galette-output-$i/galette-test-output/vsum-output.xmi ===\")",
+      "Bash(git log:*)"
     ],
     "deny": []
   }
