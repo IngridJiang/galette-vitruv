@@ -1,0 +1,74 @@
+================================================================================
+GALETTE/VITRUVIUS SYMBOLIC EXECUTION - SUMMARY REPORT
+================================================================================
+
+Total Paths Explored: 5
+Total Execution Time: 349 ms
+Total Initialization Time: 1240 ms
+Total Time (exec + init): 1589 ms
+Average Time per Path: 317 ms
+Min Execution Time: 28 ms
+Max Execution Time: 219 ms
+
+--------------------------------------------------------------------------------
+PATH DETAILS
+--------------------------------------------------------------------------------
+
+Path 1: InterruptTask
+  User Choice: 0
+  Initialization Time: 1240 ms (VSUM setup)
+  Execution Time: 219 ms (business logic)
+  Total Time: 1459 ms
+  Constraints:
+    - user_choice == 0
+  Output: galette-output-0/galette-test-output/vsum-output.xmi
+
+Path 2: PeriodicTask
+  User Choice: 1
+  Execution Time: 40 ms
+  Constraints:
+    - user_choice == 1
+  Output: galette-output-1/galette-test-output/vsum-output.xmi
+
+Path 3: SoftwareTask
+  User Choice: 2
+  Execution Time: 33 ms
+  Constraints:
+    - user_choice == 2
+  Output: galette-output-2/galette-test-output/vsum-output.xmi
+
+Path 4: TimeTableTask
+  User Choice: 3
+  Execution Time: 29 ms
+  Constraints:
+    - user_choice == 3
+  Output: galette-output-3/galette-test-output/vsum-output.xmi
+
+Path 5: Decide Later
+  User Choice: 4
+  Execution Time: 28 ms
+  Constraints:
+    - user_choice == 4
+  Output: galette-output-4/galette-test-output/vsum-output.xmi
+
+--------------------------------------------------------------------------------
+KEY ACCOMPLISHMENTS
+--------------------------------------------------------------------------------
+
+✓ Symbolic values tagged using Galette (makeSymbolicInt)
+✓ Vitruvius reactions executed naturally (NO hardcoded logic!)
+✓ Path constraints collected from switch statement in reactions
+✓ Model transformations generated for all paths
+✓ Self-contained in galette-vitruv project
+
+--------------------------------------------------------------------------------
+PATTERN USED: BrakeDisc Symbolic Execution Pattern
+--------------------------------------------------------------------------------
+
+1. Create symbolic tag: GaletteSymbolicator.makeSymbolicInt(label, value)
+2. Apply tag to value: Tainter.setTag(value, symbolicTag)
+3. Execute business logic: Test.insertTask(workDir, taggedValue)
+4. Collect constraints: PathUtils.getCurPC()
+5. Transformation logic executed from templateReactions.reactions
+
+================================================================================

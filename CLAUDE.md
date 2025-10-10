@@ -22,7 +22,7 @@ This is **Galette**, a dynamic taint tracking system for the JVM, enhanced with 
 - `cd knarr-runtime && mvn clean test` - Run Knarr symbolic execution tests
 - `cd knarr-runtime && ./run-example.sh` - Run Knarr integration example
 - `cd amathea-acset-integration && mvn clean compile` - Build Amathea-ASCET integration
-- `cd amathea-acset-integration/vsum && mvn exec:java -Dexec.mainClass="tools.vitruv.methodologisttemplate.vsum.GaletteSymbolicTest"` - Run Amathea-ASCET symbolic execution demo
+- `cd amathea-acset-integration/vsum && mvn exec:java -Dexec.mainClass="tools.vitruv.methodologisttemplate.vsum.AutomaticSymbolicVitruvTest"` - Run Amathea-ASCET symbolic execution demo
 
 ### Code Quality
 - `mvn checkstyle:check` - Run checkstyle validation (uses Google Java Style)
@@ -48,7 +48,7 @@ This is **Galette**, a dynamic taint tracking system for the JVM, enhanced with 
   - Multi-level metamodel architecture (Amathea ↔ ASCET)
   - Symbolic execution of user selection dialogs (5 task type choices)
   - Real-world model-driven engineering scenario
-  - `GaletteSymbolicTest` - Enhanced test framework with symbolic execution
+  - `AutomaticSymbolicVitruvTest` - Fully automatic symbolic execution test framework
   - Integration with existing Vitruvius reactions system
 
 ### Integration Patterns
@@ -137,7 +137,7 @@ mvn -pl :galette-integration-tests verify
 cd knarr-runtime && mvn test
 
 # Amathea-ASCET symbolic execution demo
-cd amathea-acset-integration/vsum && mvn exec:java -Dexec.mainClass="tools.vitruv.methodologisttemplate.vsum.GaletteSymbolicTest"
+cd amathea-acset-integration/vsum && mvn exec:java -Dexec.mainClass="tools.vitruv.methodologisttemplate.vsum.AutomaticSymbolicVitruvTest"
 
 # Performance benchmarks
 cd galette-benchmark && mvn exec:java
@@ -181,12 +181,12 @@ Key modules in dependency order:
 ### Main Examples
 - `AmathaeaModelTransformationExample.java` - Standalone Amathea-ASCET transformation demo
 - `AmatheaAscetTransformation.java` - Core transformation logic with symbolic execution support
-- `GaletteSymbolicTest.java` - Vitruvius integration with full VSUM and symbolic execution
+- `AutomaticSymbolicVitruvTest.java` - Fully automatic symbolic execution with Vitruvius integration
 
 ### Symbolic Execution Entry Points
 - User selection at `templateReactions.reactions:78-82` - Where `userInteractor.singleSelectionDialog` creates integer choices (0-4)
 - Transform logic in `AmatheaAscetTransformation.transform()` - Where switch statements collect path constraints  
-- Integration wrapper in `GaletteSymbolicTest.insertTaskWithSymbolicExecution()` - Where symbolic values are created
+- Automatic path exploration in `AutomaticSymbolicExecutor.exploreAllPaths()` - Where symbolic values are created and paths explored automatically
 
 ### Critical Integration Points
 - **Integer symbolic values**: Created via `SymbolicExecutionWrapper.makeSymbolicInt("user_choice", selection)`

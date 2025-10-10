@@ -1,0 +1,57 @@
+[
+  {
+    "pathId": 1,
+    "symbolicInputs": {
+      "user_choice": 0
+    },
+    "constraints": [
+      "user_choice == 0"
+    ],
+    "executionTime": 219,
+    "initializationTime": 1240
+  },
+  {
+    "pathId": 2,
+    "symbolicInputs": {
+      "user_choice": 1
+    },
+    "constraints": [
+      "user_choice == 1"
+    ],
+    "executionTime": 40,
+    "initializationTime": 0
+  },
+  {
+    "pathId": 3,
+    "symbolicInputs": {
+      "user_choice": 2
+    },
+    "constraints": [
+      "user_choice == 2"
+    ],
+    "executionTime": 33,
+    "initializationTime": 0
+  },
+  {
+    "pathId": 4,
+    "symbolicInputs": {
+      "user_choice": 3
+    },
+    "constraints": [
+      "user_choice == 3"
+    ],
+    "executionTime": 29,
+    "initializationTime": 0
+  },
+  {
+    "pathId": 5,
+    "symbolicInputs": {
+      "user_choice": 4
+    },
+    "constraints": [
+      "user_choice == 4"
+    ],
+    "executionTime": 28,
+    "initializationTime": 0
+  }
+]
