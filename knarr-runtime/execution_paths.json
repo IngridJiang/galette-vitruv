@@ -7,8 +7,8 @@
     "constraints": [
       "user_choice == 0"
     ],
-    "executionTime": 219,
-    "initializationTime": 1240
+    "executionTime": 218,
+    "initializationTime": 1233
   },
   {
     "pathId": 2,
@@ -18,7 +18,7 @@
     "constraints": [
       "user_choice == 1"
     ],
-    "executionTime": 40,
+    "executionTime": 35,
     "initializationTime": 0
   },
   {
@@ -29,7 +29,7 @@
     "constraints": [
       "user_choice == 2"
     ],
-    "executionTime": 33,
+    "executionTime": 32,
     "initializationTime": 0
   },
   {
@@ -40,7 +40,7 @@
     "constraints": [
       "user_choice == 3"
     ],
-    "executionTime": 29,
+    "executionTime": 31,
     "initializationTime": 0
   },
   {
@@ -51,7 +51,7 @@
     "constraints": [
       "user_choice == 4"
     ],
-    "executionTime": 28,
+    "executionTime": 22,
     "initializationTime": 0
   }
 ]
