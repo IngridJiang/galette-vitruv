@@ -1,0 +1,102 @@
+import "http://amathea/1.0" as amathea
+import "http://ascet/1.0" as ascet
+import tools.vitruv.framework.userinteraction.UserInteractionOptions.WindowModality
+
+reactions: templateReactions
+in reaction to changes in amathea
+execute actions in ascet
+
+reaction TaskInserted {
+	after element amathea::Task inserted in amathea::ComponentContainer[tasks]
+	call {
+		val taskOptions = #[
+			"Create InterruptTask",
+			"Create PeriodicTask", 
+			"Create SoftwareTask",
+			"Create TimeTableTask",
+			"Decide Later"
+		]
+		
+		val userMsg = '''
+			A new Amathea task «newValue.name» was inserted.
+			Please select the corresponding ASCET task type:
+		'''
+		
+		// This is the key integration point for symbolic execution
+		// The userInteractor.singleSelectionDialogBuilder call creates an integer choice
+		// When wrapped with SymbolicExecutionWrapper.makeSymbolicInt(), this becomes symbolic
+		val Integer selected = userInteractor
+			.singleSelectionDialogBuilder
+			.message(userMsg)
+			.choices(taskOptions)
+			.windowModality(WindowModality.MODAL)
+			.startInteraction()
+		
+		// This switch statement is where path constraints are collected during symbolic execution
+		// Each case corresponds to a different execution path that can be explored
+		switch (selected) {
+			case 0: createInterruptTask(newValue, newValue.eContainer as amathea::ComponentContainer)
+			case 1: createPeriodicTask(newValue, newValue.eContainer as amathea::ComponentContainer) 
+			case 2: createSoftwareTask(newValue, newValue.eContainer as amathea::ComponentContainer)
+			case 3: createTimeTableTask(newValue, newValue.eContainer as amathea::ComponentContainer)
+			case 4: {
+				// Decide Later - no immediate action
+				logger.info('''Task «newValue.name» transformation deferred''')
+			}
+		}
+	}
+}
+
+routine createInterruptTask(amathea::Task amaltheaTask, amathea::ComponentContainer container) {
+	action {
+		val ascetModel = retrieve ascet::AscetModel corresponding to container tagged with "AscetModel"
+		call {
+			val interruptTask = ascet.ascetFactory.createInterruptTask()
+			interruptTask.name = amaltheaTask.name
+			interruptTask.priority = if (amaltheaTask.preemption?.toString == "preemptive") 10 else 1
+			ascetModel.tasks.add(interruptTask)
+			logger.info('''Created InterruptTask «interruptTask.name» from Amathea task''')
+		}
+	}
+}
+
+routine createPeriodicTask(amathea::Task amaltheaTask, amathea::ComponentContainer container) {
+	action {
+		val ascetModel = retrieve ascet::AscetModel corresponding to container tagged with "AscetModel"
+		call {
+			val periodicTask = ascet.ascetFactory.createPeriodicTask()
+			periodicTask.name = amaltheaTask.name
+			periodicTask.priority = if (amaltheaTask.preemption?.toString == "preemptive") 10 else 1
+			periodicTask.period = 10.0 // Default 10ms period
+			periodicTask.delay = 0.0   // No delay
+			ascetModel.tasks.add(periodicTask)
+			logger.info('''Created PeriodicTask «periodicTask.name» from Amathea task''')
+		}
+	}
+}
+
+routine createSoftwareTask(amathea::Task amaltheaTask, amathea::ComponentContainer container) {
+	action {
+		val ascetModel = retrieve ascet::AscetModel corresponding to container tagged with "AscetModel"
+		call {
+			val softwareTask = ascet.ascetFactory.createSoftwareTask()
+			softwareTask.name = amaltheaTask.name
+			softwareTask.priority = if (amaltheaTask.preemption?.toString == "preemptive") 10 else 1
+			ascetModel.tasks.add(softwareTask)
+			logger.info('''Created SoftwareTask «softwareTask.name» from Amathea task''')
+		}
+	}
+}
+
+routine createTimeTableTask(amathea::Task amaltheaTask, amathea::ComponentContainer container) {
+	action {
+		val ascetModel = retrieve ascet::AscetModel corresponding to container tagged with "AscetModel"
+		call {
+			val timeTableTask = ascet.ascetFactory.createTimeTableTask()
+			timeTableTask.name = amaltheaTask.name
+			timeTableTask.priority = if (amaltheaTask.preemption?.toString == "preemptive") 10 else 1
+			ascetModel.tasks.add(timeTableTask)
+			logger.info('''Created TimeTableTask «timeTableTask.name» from Amathea task''')
+		}
+	}
+}
